@@ -7,6 +7,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import java.util.ArrayList;
+import pharmacie.entity.Fournisseur;
 
 import lombok.*;
 
@@ -35,4 +37,9 @@ public class Categorie {
 	@JsonIgnoreProperties({"categorie", "lignes"})
 	private List<Medicament> medicaments = new LinkedList<>();
 
+	@ManyToMany(mappedBy = "categories")
+	@JsonIgnoreProperties("categories")
+	@ToString.Exclude
+	
+	private List<Fournisseur> fournisseurs = new ArrayList<>();
 }
