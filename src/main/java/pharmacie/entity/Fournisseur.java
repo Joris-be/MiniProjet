@@ -12,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,26 +32,21 @@ public class Fournisseur {
     @Id
     @Basic(optional = false)
     @NonNull
-    @Size(min = 1, max = 5)
-    @Column(nullable = false, length = 5)
-    private String idFournisseur;
+    private String idfournisseur;
 
     @Basic(optional = false)
     @NonNull
-    @Size(min = 1, max = 40)
-    @Column(nullable = false, length = 40)
     private String nom;
 
     @NonNull
-    @Size(max = 30)
-    @Column(nullable = false, length = 30)
-    private String adresseElectronique;
+    @Email
+    private String mail;
 
     @ManyToMany
     @JoinTable(
             name = "fournisseur_categorie",
-            joinColumns = @JoinColumn(name = "idFournisseur"),
-            inverseJoinColumns = @JoinColumn(name = "idCategorie")
+            joinColumns = @JoinColumn(name = "id_fournisseur"),
+            inverseJoinColumns = @JoinColumn(name = "id_categorie")
     )
     @JsonIgnoreProperties("fournisseurs")
     

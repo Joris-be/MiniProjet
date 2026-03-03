@@ -182,8 +182,7 @@ INSERT INTO LIGNE (COMMANDE_NUMERO, MEDICAMENT_REFERENCE, QUANTITE) VALUES
 (7, 7, 80), (7, 17, 50), (7, 27, 95), (7, 37, 55), (7, 100, 45),
 (8, 8, 100), (8, 18, 75), (8, 28, 80), (8, 38, 70), (8, 48, 60);
 
--- Insertion des fournisseurs
-INSERT INTO FOURNISSEUR (ID_FOURNISSEUR, NOM, ADRESSE_ELECTRONIQUE) VALUES
+INSERT INTO FOURNISSEUR (idfournisseur, nom, mail) VALUES
 ('F001', 'KendrickExpress', 'joris.beldjoudi+KendrickExpress@gmail.com'),
 ('F002', 'KubrickSupply', 'joris.beldjoudi+KubrickSupply@gmail.com'),
 ('F003', 'SpikeLeeDistrib', 'joris.beldjoudi+SpikeLeeDistrib@gmail.com'),
@@ -193,10 +192,10 @@ INSERT INTO FOURNISSEUR (ID_FOURNISSEUR, NOM, ADRESSE_ELECTRONIQUE) VALUES
 ('F007', 'XwingDelivery', 'joris.beldjoudi+XwingDelivery@gmail.com'),
 ('F008', 'ChungkingExpress', 'joris.beldjoudi+ChungkingExpress@gmail.com'),
 ('F009', 'TwinPeaksDelivery', 'joris.beldjoudi+TwinPeaksDelivery@gmail.com'),
-('F010', 'FondationSpeedwagon', 'joris.beldjoudi+FondationSpeedwagon@gmail.com')
+('F010', 'FondationSpeedwagon', 'joris.beldjoudi+FondationSpeedwagon@gmail.com');
 
 -- Association des fournisseurs et des catégories
-INSERT INTO FOURNISSEUR_CATEGORIE (ID_FOURNISSEUR, ID_CATEGORIE) VALUES
+INSERT INTO FOURNISSEUR_CATEGORIE (id_fournisseur, id_categorie) VALUES
 -- Catégorie 1 : Antalgiques et Antipyrétiques
 ('F001', 1), ('F002', 1),
 -- Catégorie 2 : Anti-inflammatoires
