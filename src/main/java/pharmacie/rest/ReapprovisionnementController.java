@@ -10,7 +10,7 @@ import pharmacie.service.ReapprovisionnementService;
 @RestController
 @RequestMapping("/approvisionnement")
 @RequiredArgsConstructor
-public class ApprovisionnementController {
+public class ReapprovisionnementController {
 
     private final ReapprovisionnementService reapprovisionnementService;
 
