@@ -181,3 +181,39 @@ INSERT INTO LIGNE (COMMANDE_NUMERO, MEDICAMENT_REFERENCE, QUANTITE) VALUES
 (6, 6, 110), (6, 16, 65), (6, 26, 85), (6, 36, 60), (6, 91, 70),
 (7, 7, 80), (7, 17, 50), (7, 27, 95), (7, 37, 55), (7, 100, 45),
 (8, 8, 100), (8, 18, 75), (8, 28, 80), (8, 38, 70), (8, 48, 60);
+
+-- Insertion des fournisseurs
+INSERT INTO FOURNISSEUR (ID_FOURNISSEUR, NOM, ADRESSE_ELECTRONIQUE) VALUES
+('F001', 'KendrickExpress', 'joris.beldjoudi+KendrickExpress@gmail.com'),
+('F002', 'KubrickSupply', 'joris.beldjoudi+KubrickSupply@gmail.com'),
+('F003', 'SpikeLeeDistrib', 'joris.beldjoudi+SpikeLeeDistrib@gmail.com'),
+('F004', 'TransportGodard', 'joris.beldjoudi+TransportGodard@gmail.com'),
+('F005', 'TaxiDriver', 'joris.beldjoudi+TaxiDriver@gmail.com'),
+('F006', 'CowboyBebop', 'joris.beldjoudi+CowboyBebop@gmail.com'),
+('F007', 'XwingDelivery', 'joris.beldjoudi+XwingDelivery@gmail.com'),
+('F008', 'ChungkingExpress', 'joris.beldjoudi+ChungkingExpress@gmail.com'),
+('F009', 'TwinPeaksDelivery', 'joris.beldjoudi+TwinPeaksDelivery@gmail.com'),
+('F010', 'FondationSpeedwagon', 'joris.beldjoudi+FondationSpeedwagon@gmail.com')
+
+-- Association des fournisseurs et des catégories
+INSERT INTO FOURNISSEUR_CATEGORIE (ID_FOURNISSEUR, ID_CATEGORIE) VALUES
+-- Catégorie 1 : Antalgiques et Antipyrétiques
+('F001', 1), ('F002', 1),
+-- Catégorie 2 : Anti-inflammatoires
+('F003', 2), ('F004', 2),
+-- Catégorie 3 : Antibiotiques
+('F005', 3), ('F006', 3),
+-- Catégorie 4 : Antihypertenseurs
+('F007', 4), ('F008', 4),
+-- Catégorie 5 : Antidiabétiques
+('F009', 5), ('F010', 5),
+-- Catégorie 6 : Antihistaminiques
+('F001', 6), ('F002', 6),
+-- Catégorie 7 : Vitamines et Compléments
+('F003', 7), ('F004', 7),
+-- Catégorie 8 : Médicaments Cardiovasculaires
+('F005', 8), ('F006', 8),
+-- Catégorie 9 : Médicaments Gastro-intestinaux
+('F007', 9), ('F008', 9),
+-- Catégorie 10 : Médicaments Respiratoires
+('F009', 10), ('F010', 10);
