@@ -51,6 +51,7 @@ public class ReapprovisionnementService {
             Map<Categorie, List<Medicament>> articlesParCategorie) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(fournisseur.getMail()); 
+        message.setFrom("joris.beldjoudi@gmail.com");
         message.setSubject("Demande de devis - Réapprovisionnement Pharmacie");
         StringBuilder text = new StringBuilder();
         text.append("Bonjour ").append(fournisseur.getNom()).append(",\n\n");
