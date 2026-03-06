@@ -4,75 +4,74 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import pharmacie.dao.MedicamentRepository;
 import pharmacie.entity.Categorie;
 import pharmacie.entity.Fournisseur;
 import pharmacie.entity.Medicament;
 
 @Service
-@RequiredArgsConstructor
-@Slf4j
 public class ReapprovisionnementService {
 
-    private final MedicamentRepository medicamentRepository;
-    private final JavaMailSender javaMailSender;
+    @Autowired
+    private MedicamentRepository medicamentRepository;
 
-    @Transactional(readOnly = true)
-    public void envoyerDemandesDevis() {
+    @Autowired
+    private JavaMailSender mailSender;
+
+    
+    public void DemanderReapprovisionnement() {
         List<Medicament> medicamentsACommander = medicamentRepository.findMedicamentsAReapprovisionner();
-        if (medicamentsACommander.isEmpty()) {
-            return;
-        }
-        Map<Fournisseur, Map<Categorie, List<Medicament>>> articlesParFournisseur = new HashMap<>();
+        
+        Map<Fournisseur, Map<Categorie, List<Medicament>>> parFournisseur = new HashMap<>();
+
         for (Medicament med : medicamentsACommander) {
             Categorie cat = med.getCategorie();
-            List<Fournisseur> fournisseurs = cat.getFournisseurs();
-            for (Fournisseur fournisseur : fournisseurs) {
-                articlesParFournisseur
-                        .computeIfAbsent(fournisseur, k -> new HashMap<>())
-                        .computeIfAbsent(cat, k -> new ArrayList<>())
-                        .add(med);
+            for (Fournisseur fournisseur : cat.getFournisseurs()) {
+                parFournisseur
+                    .computeIfAbsent(fournisseur, f -> new HashMap<>())
+                    .computeIfAbsent(cat, c -> new ArrayList<>())
+                    .add(med);
             }
         }
-        for (Map.Entry<Fournisseur, Map<Categorie, List<Medicament>>> entry : articlesParFournisseur.entrySet()) {
-            Fournisseur fournisseur = entry.getKey();
-            Map<Categorie, List<Medicament>> articlesParCategorie = entry.getValue();
-            envoyerMailFournisseur(fournisseur, articlesParCategorie);
+
+        
+        for (Fournisseur fournisseur : parFournisseur.keySet()) {
+            envoyerMail(fournisseur, parFournisseur.get(fournisseur));
         }
     }
 
-    private void envoyerMailFournisseur(Fournisseur fournisseur,
-            Map<Categorie, List<Medicament>> articlesParCategorie) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(fournisseur.getMail()); 
-        message.setFrom("joris.beldjoudi@gmail.com");
-        message.setSubject("Demande de devis - Réapprovisionnement Pharmacie");
-        StringBuilder text = new StringBuilder();
-        text.append("Bonjour ").append(fournisseur.getNom()).append(",\n\n");
-        text.append("Veuillez nous transmettre un devis pour les médicaments suivants :\n\n");
-        for (Map.Entry<Categorie, List<Medicament>> catEntry : articlesParCategorie.entrySet()) {
-            Categorie categorie = catEntry.getKey();
-            List<Medicament> medicaments = catEntry.getValue();
-            text.append("Catégorie : ").append(categorie.getLibelle()).append("\n");
-            for (Medicament med : medicaments) {
-                text.append("- ").append(med.getNom())
-                        .append(" (Stock: ").append(med.getUnitesEnStock())
-                        .append(", Niveau Reappro: ").append(med.getNiveauDeReappro())
-                        .append(")\n");
+    private void envoyerMail(Fournisseur fournisseur, Map<Categorie, List<Medicament>> parCategorie) {
+
+        StringBuilder contenu = new StringBuilder();
+        contenu.append("Bonjour ").append(fournisseur.getNom()).append(",\n\n");
+        contenu.append("Merci de nous transmettre un devis pour les médicaments suivants :\n\n");
+
+        for (Categorie categorie : parCategorie.keySet()) {
+            contenu.append("Catégorie : ").append(categorie.getLibelle()).append("\n");
+            for (Medicament med : parCategorie.get(categorie)) {
+                contenu.append("- ").append(med.getNom())
+                       .append(" (Stock: ").append(med.getUnitesEnStock())
+                       .append(", Seuil: ").append(med.getNiveauDeReappro())
+                       .append(")\n");
             }
-            text.append("\n");
+            contenu.append("\n");
         }
-        message.setText(text.toString());
+
+        
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("joris.beldjoudi@gmail.com");
+        message.setTo(fournisseur.getMail());
+        message.setSubject("Demande de devis – Réapprovisionnement pharmacie");
+        message.setText(contenu.toString());
+
         try {
-            javaMailSender.send(message);
+            mailSender.send(message);
         } catch (Exception e) {
-            log.error("Erreur lors de l'envoi de l'email à {}", fournisseur.getMail(), e);
+            System.out.println("Erreur envoi mail à " + fournisseur.getMail() + " : " + e.getMessage());
         }
     }
 }

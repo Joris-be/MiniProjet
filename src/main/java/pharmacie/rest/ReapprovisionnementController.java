@@ -16,7 +16,7 @@ public class ReapprovisionnementController {
 
     @PostMapping("/declencher")
     public ResponseEntity<String> declencher() {
-        reapprovisionnementService.envoyerDemandesDevis();
+        reapprovisionnementService.DemanderReapprovisionnement();
         return ResponseEntity.ok("Demandes de devis envoyées avec succès !");
     }
 }
